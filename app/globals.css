@@ -1,26 +1,301 @@
+/* ① External @imports MUST be first */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Press+Start+2P&family=VT323:wght@400&display=swap');
+
+/* ② Tailwind v4 */
 @import "tailwindcss";
 
+/* ─── Design tokens ──────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --rose:        #FF6B9D;
+  --rose-light:  #FFB3D1;
+  --blush:       #FFD6E8;
+  --lavender:    #C9B8FF;
+  --lavender-dk: #9C7BEA;
+  --peach:       #FFD4A3;
+  --gold:        #F7C948;
+  --gold-dk:     #D4A017;
+  --cream:       #FFF8F5;
+  --glass:       rgba(255,255,255,0.55);
+  --glass-border:rgba(255,255,255,0.75);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: linear-gradient(135deg, #FFD6E8 0%, #E8D5FF 30%, #FFD4A3 60%, #FFDDE8 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255,182,193,0.2); }
+::-webkit-scrollbar-thumb { background: #FF6B9D; border-radius: 99px; }
+
+/* ─── Glassmorphic window ────────────────────────────────────────────────── */
+.glass-window {
+  background: rgba(255,255,255,0.60);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255,255,255,0.80);
+  border-radius: 20px;
+  box-shadow:
+    0 8px 32px rgba(255,105,157,0.18),
+    0 2px 8px rgba(200,150,255,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+}
+
+/* ─── Window title bar ───────────────────────────────────────────────────── */
+.window-bar {
+  background: linear-gradient(90deg, #FF6B9D 0%, #C9B8FF 50%, #FF6B9D 100%);
+  border-radius: 18px 18px 0 0;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  user-select: none;
+}
+
+.win-dot {
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  font-weight: 700;
+  cursor: default;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+.win-dot:hover { opacity: 0.75; }
+
+/* ─── Premium buttons ────────────────────────────────────────────────────── */
+.btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 28px;
+  border-radius: 50px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  color: white;
+  background: linear-gradient(135deg, #FF6B9D 0%, #C9B8FF 50%, #F7C948 100%);
+  background-size: 200% 200%;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  box-shadow:
+    0 6px 20px rgba(255,107,157,0.45),
+    0 2px 6px rgba(200,150,255,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+  transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.18s, background-position 0.4s;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -60%;
+  width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+  transition: left 0.5s;
+}
+.btn-primary:hover { transform: scale(1.06) translateY(-2px); background-position: right center;
+  box-shadow: 0 10px 30px rgba(255,107,157,0.5), 0 4px 12px rgba(200,150,255,0.35); }
+.btn-primary:hover::before { left: 130%; }
+.btn-primary:active { transform: scale(0.96); box-shadow: 0 3px 10px rgba(255,107,157,0.35); }
+
+.btn-gold {
+  background: linear-gradient(135deg, #F7C948 0%, #FFD4A3 50%, #F7A800 100%);
+  box-shadow: 0 6px 20px rgba(247,201,72,0.45), inset 0 1px 0 rgba(255,255,255,0.4);
+  color: #7B4F00;
+}
+.btn-gold:hover { box-shadow: 0 10px 30px rgba(247,201,72,0.55); }
+
+.btn-outline {
+  background: rgba(255,255,255,0.7);
+  border: 2px solid rgba(255,107,157,0.5);
+  color: #FF6B9D;
+  box-shadow: 0 4px 14px rgba(255,107,157,0.15);
+}
+.btn-outline:hover {
+  background: rgba(255,107,157,0.08);
+  border-color: #FF6B9D;
+  box-shadow: 0 6px 20px rgba(255,107,157,0.25);
+}
+
+/* ─── Retro badge chip ───────────────────────────────────────────────────── */
+.retro-badge {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(255,107,157,0.12);
+  border: 1px solid rgba(255,107,157,0.3);
+  color: #FF6B9D;
+  display: inline-block;
+}
+
+/* ─── Floating particles ─────────────────────────────────────────────────── */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  animation: particleDrift linear infinite;
+}
+@keyframes particleDrift {
+  0%   { transform: translateY(0)   rotate(0deg)   scale(1);   opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.7; }
+  100% { transform: translateY(-110vh) rotate(720deg) scale(0.5); opacity: 0; }
+}
+
+/* ─── Candle flicker ─────────────────────────────────────────────────────── */
+@keyframes flicker {
+  0%,100% { transform: scaleY(1)    scaleX(1);   opacity: 1; }
+  25%      { transform: scaleY(0.92) scaleX(1.05); opacity: 0.85; }
+  50%      { transform: scaleY(1.08) scaleX(0.95); opacity: 1; }
+  75%      { transform: scaleY(0.95) scaleX(1.02); opacity: 0.9; }
+}
+.flame { animation: flicker 0.6s ease-in-out infinite; transform-origin: bottom center; }
+
+/* ─── Float bob ──────────────────────────────────────────────────────────── */
+@keyframes floatBob {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-14px); }
+}
+.float-bob { animation: floatBob 3s ease-in-out infinite; }
+
+/* ─── Heartbeat ──────────────────────────────────────────────────────────── */
+@keyframes heartbeat {
+  0%,100% { transform: scale(1); }
+  14%      { transform: scale(1.18); }
+  28%      { transform: scale(1); }
+  42%      { transform: scale(1.1); }
+  70%      { transform: scale(1); }
+}
+.heartbeat { animation: heartbeat 1.4s ease-in-out infinite; }
+
+/* ─── Typewriter cursor ──────────────────────────────────────────────────── */
+@keyframes blink { 0%,100%{ opacity:1; } 50%{ opacity:0; } }
+.cursor-blink { animation: blink 0.8s step-end infinite; }
+
+/* ─── Loading dots ───────────────────────────────────────────────────────── */
+@keyframes loadDot {
+  0%,80%,100% { transform: scale(0.5); opacity: 0.4; }
+  40%          { transform: scale(1.1); opacity: 1; }
+}
+.dot-1 { animation: loadDot 1.2s 0.0s infinite ease-in-out; }
+.dot-2 { animation: loadDot 1.2s 0.2s infinite ease-in-out; }
+.dot-3 { animation: loadDot 1.2s 0.4s infinite ease-in-out; }
+
+/* ─── Rainbow shimmer ────────────────────────────────────────────────────── */
+@keyframes rainbow { 0%{ filter:hue-rotate(0deg); } 100%{ filter:hue-rotate(360deg); } }
+.rainbow { animation: rainbow 3s linear infinite; }
+
+/* ─── Progress bar shine ─────────────────────────────────────────────────── */
+@keyframes progressShine {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200%  center; }
+}
+
+/* ─── Glow pulse ─────────────────────────────────────────────────────────── */
+@keyframes glowPulse {
+  0%,100% { box-shadow: 0 0 10px rgba(255,107,157,0.4); }
+  50%      { box-shadow: 0 0 25px rgba(255,107,157,0.75), 0 0 50px rgba(201,184,255,0.3); }
+}
+.glow-pulse { animation: glowPulse 2s ease-in-out infinite; }
+
+/* ─── Sound wave bars ────────────────────────────────────────────────────── */
+.sound-bar {
+  display: inline-block;
+  width: 3px;
+  border-radius: 2px;
+  background: white;
+  animation: soundWave 0.8s ease-in-out infinite alternate;
+  transform-origin: bottom;
+}
+.sound-bar:nth-child(1) { animation-delay: 0.0s; height: 6px; }
+.sound-bar:nth-child(2) { animation-delay: 0.15s; height: 10px; }
+.sound-bar:nth-child(3) { animation-delay: 0.05s; height: 7px; }
+.sound-bar:nth-child(4) { animation-delay: 0.2s; height: 12px; }
+.sound-bar:nth-child(5) { animation-delay: 0.1s; height: 5px; }
+@keyframes soundWave {
+  from { transform: scaleY(0.3); }
+  to   { transform: scaleY(1.6); }
+}
+
+/* ─── Polaroid card ──────────────────────────────────────────────────────── */
+.polaroid {
+  background: white;
+  padding: 10px 10px 36px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.08);
+  border-radius: 4px;
+  cursor: grab;
+}
+.polaroid:active { cursor: grabbing; }
+
+/* ─── Card input ─────────────────────────────────────────────────────────── */
+.card-input {
+  background: rgba(255,255,255,0.8);
+  border: 2px solid rgba(255,107,157,0.3);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: 'Plus Jakarta Sans', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #333;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card-input:focus {
+  border-color: #FF6B9D;
+  box-shadow: 0 0 0 4px rgba(255,107,157,0.15);
+}
+.card-input::placeholder { color: rgba(0,0,0,0.3); letter-spacing: 0.08em; }
+
+/* ─── Smoke Puff Animation ───────────────────────────────────────────────── */
+@keyframes smokeRise {
+  0%   { transform: translateY(0) scale(0.5); opacity: 0.9; }
+  50%  { transform: translateY(-16px) scale(1.2) translateX(4px); opacity: 0.6; }
+  100% { transform: translateY(-32px) scale(1.8) translateX(-4px); opacity: 0; }
+}
+.smoke-puff {
+  animation: smokeRise 1.4s ease-out forwards;
+}
+
+/* ─── Vintage Notepad ────────────────────────────────────────────────────── */
+.vintage-notepad {
+  background-color: #FFFDF7;
+  background-image:
+    linear-gradient(to right, transparent 32px, rgba(244, 114, 182, 0.45) 32px, rgba(244, 114, 182, 0.45) 34px, transparent 34px),
+    repeating-linear-gradient(transparent, transparent 29px, rgba(186, 200, 240, 0.45) 29px, rgba(186, 200, 240, 0.45) 30px);
+  background-attachment: local;
+}
+
+/* ─── Washi Tape ─────────────────────────────────────────────────────────── */
+.washi-tape {
+  background: rgba(255, 218, 185, 0.75);
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255, 107, 157, 0.2) 4px, rgba(255, 107, 157, 0.2) 8px);
+  border: 1px solid rgba(255, 182, 193, 0.5);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
